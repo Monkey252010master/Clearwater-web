@@ -32,9 +32,16 @@
         });
 
         const data = await response.json();
-        console.log("ERLC API Response:", data); // Debug log
+        console.log("Full API response:", data); // Debug log
 
-        const count = Array.isArray(data?.players) ? data.players.length : 0;
+        // Try to extract player count safely
+        let count = 0;
+        if (Array.isArray(data?.players)) {
+          count = data.players.length;
+        } else if (Array.isArray(data?.server?.players)) {
+          count = data.server.players.length;
+        }
+
         const countSpan = document.getElementById("playerCount");
         const statusBox = document.getElementById("playerStatus");
 
