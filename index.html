@@ -2,71 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Clearwater RP & Event Network</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clearwater RP</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Banner -->
-  <img src="assets/images/Clearwater.png" alt="Clearwater RP Banner" class="fullscreen-banner" />
 
-  <!-- Status Section -->
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+    <ul class="menu" id="menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard" target="_blank">Staff Dashboard</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page content -->
   <main>
-    <div class="status-section">
-      <div id="playerStatus" class="player-status">
-        👥 Live Players: <span id="playerCount">--</span>
-      </div>
+    <h1>Welcome to Clearwater RP</h1>
+    <p>This is your main site. Use the menu to navigate.</p>
 
-      <div class="session-status ssd">
-        🔴 Session Shut Down
-      </div>
-    </div>
+    <section>
+      <h2>About Us</h2>
+      <p>Clearwater RP is a community built for immersive roleplay and events. 
+         We focus on creativity, collaboration, and fun.</p>
+    </section>
+
+    <section>
+      <h2>Events</h2>
+      <p>Stay tuned for upcoming events and announcements. 
+         Our staff team works hard to keep the community active and engaging.</p>
+    </section>
+
+    <section>
+      <h2>Contact</h2>
+      <p>Need help or want to get involved? Reach out to us on Discord or through our contact page.</p>
+    </section>
   </main>
 
-  <!-- Script for Player Count -->
+  <!-- JavaScript for menu toggle -->
   <script>
-    async function fetchPlayerCount() {
-      try {
-        const response = await fetch("https://api.policeroleplay.community/v1/server/players", {
-          method: "GET",
-          headers: {
-            "Server-Key": "NGZgZZKUEpfJSCSCwOkO-sEarVbjnxzHoinPxyChXBbvpmWopIIwVJuTNtpME"
-          }
-        });
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("menu");
 
-        const data = await response.json();
-        console.log("Player API response:", data); // Debug log
-
-        // ERLC /server/players returns an array of player objects
-        const players = Array.isArray(data) ? data : [];
-        const count = players.length;
-
-        const countSpan = document.getElementById("playerCount");
-        const statusBox = document.getElementById("playerStatus");
-
-        countSpan.textContent = count;
-
-        // Reset classes
-        statusBox.classList.remove("low", "medium", "high");
-
-        // Apply color-coded class
-        if (count <= 5) {
-          statusBox.classList.add("low");
-        } else if (count <= 15) {
-          statusBox.classList.add("medium");
-        } else {
-          statusBox.classList.add("high");
-        }
-
-      } catch (error) {
-        console.error("Error fetching player count:", error);
-        document.getElementById("playerCount").textContent = "N/A";
-      }
-    }
-
-    // Fetch immediately and every 30s
-    fetchPlayerCount();
-    setInterval(fetchPlayerCount, 30000);
+    toggle.addEventListener("click", () => {
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    });
   </script>
 </body>
 </html>
