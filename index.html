@@ -8,17 +8,15 @@
 </head>
 <body>
 
-  <!-- Header with hamburger -->
+  <!-- Header -->
   <header class="header">
     <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span class="bar"></span>
-      <span class="bar"></span>
-      <span class="bar"></span>
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
     </button>
     <h1 class="site-title">Clearwater RP</h1>
   </header>
 
-  <!-- Dropdown menu -->
+  <!-- Drawer menu -->
   <nav class="drawer" id="drawer">
     <ul class="nav-list">
       <li><a href="index.html">Home</a></li>
@@ -30,7 +28,6 @@
     </ul>
   </nav>
 
-  <!-- Overlay -->
   <div class="overlay" id="overlay"></div>
 
   <!-- Main content -->
@@ -38,6 +35,12 @@
     <section class="hero">
       <h2>Welcome to Clearwater RP</h2>
       <p>Immersive roleplay, community events, and a dedicated staff team.</p>
+    </section>
+
+    <section class="status-panel">
+      <h3>Server Status</h3>
+      <p id="player-count">Live Players: …</p>
+      <p id="session-status">Session: …</p>
     </section>
 
     <section class="section">
@@ -56,26 +59,35 @@
     </section>
   </main>
 
-  <!-- Script -->
   <script>
+    // Hamburger toggle
     const hamburger = document.getElementById("hamburger");
     const drawer = document.getElementById("drawer");
     const overlay = document.getElementById("overlay");
 
-    function openDrawer() {
-      drawer.classList.add("open");
-      overlay.classList.add("show");
-    }
-    function closeDrawer() {
-      drawer.classList.remove("open");
-      overlay.classList.remove("show");
-    }
+    function openDrawer() { drawer.classList.add("open"); overlay.classList.add("show"); }
+    function closeDrawer() { drawer.classList.remove("open"); overlay.classList.remove("show"); }
 
     hamburger.addEventListener("click", () => {
       drawer.classList.contains("open") ? closeDrawer() : openDrawer();
     });
     overlay.addEventListener("click", closeDrawer);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+    // Live status updater
+    async function updateStatus() {
+      try {
+        const res = await fetch("https://YOUR-RENDER-APP.onrender.com/status");
+        const data = await res.json();
+        document.getElementById("player-count").textContent = "Live Players: " + data.players;
+        document.getElementById("session-status").textContent = "Session: " + (data.sessionActive ? "Active" : "Shut Down");
+      } catch (err) {
+        document.getElementById("player-count").textContent = "Live Players: N/A";
+        document.getElementById("session-status").textContent = "Session: N/A";
+      }
+    }
+    updateStatus();
+    setInterval(updateStatus, 5000); // refresh every 5s
   </script>
 </body>
 </html>
