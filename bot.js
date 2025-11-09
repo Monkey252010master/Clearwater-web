@@ -37,18 +37,20 @@ client.on("messageCreate", (message) => {
           headers: { "Server-Key": process.env.ERLC_API_KEY }
         });
 
-        console.log("API response status:", response.status);
-
-        if (!response.ok) throw new Error("ERLC API error: " + response.status);
+        if (!response.ok) {
+          // Show exact error in Discord
+          message.reply(`⚠️ ERLC API error: ${response.status} ${response.statusText}`);
+          return;
+        }
 
         const data = await response.json();
-        console.log("API response body:", data);
-
         const playerCount = data.players ? data.players.length : 0;
+
         message.reply(`📊 Current player count: ${playerCount}`);
       } catch (err) {
         console.error(err);
-        message.reply("⚠️ Could not fetch player count from ER:LC API.");
+        // Show exact error in Discord
+        message.reply(`⚠️ Error fetching player count: ${err.message}`);
       }
     })();
   }
@@ -66,7 +68,7 @@ app.get("/status", async (req, res) => {
       headers: { "Server-Key": process.env.ERLC_API_KEY }
     });
 
-    if (!response.ok) throw new Error("ERLC API error: " + response.status);
+    if (!response.ok) throw new Error("ERLC API error");
 
     const data = await response.json();
     const playerCount = data.players ? data.players.length : 0;
@@ -77,7 +79,8 @@ app.get("/status", async (req, res) => {
     });
   } catch (err) {
     console.error(err);
-    res.json({ players: 0, sessionActive: false });
+    // Website only shows "error"
+    res.json({ error: "error" });
   }
 });
 
