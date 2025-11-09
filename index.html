@@ -2,54 +2,47 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clearwater RP</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav class="navbar">
-    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
-    <ul class="menu" id="menu">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard" target="_blank">Staff Dashboard</a></li>
-      <li><a href="contact.html">Contact</a></li>
-    </ul>
-  </nav>
+  <!-- Header -->
+  <header class="header">
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <h1 class="site-title">Clearwater RP</h1>
+  </header>
 
-  <!-- Page content -->
-  <main>
-    <h1>Welcome to Clearwater RP</h1>
-    <p>This is your main site. Use the menu to navigate.</p>
+  <!-- Side drawer navigation -->
+  <aside class="drawer" id="drawer">
+    <nav>
+      <ul class="nav-list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="https://YOUR-RENDER-APP.onrender.com/auth/discord" target="_blank">Log in with Discord</a></li>
+        <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard" target="_blank">Staff Dashboard</a></li>
+      </ul>
+    </nav>
+  </aside>
 
-    <section>
-      <h2>About Us</h2>
-      <p>Clearwater RP is a community built for immersive roleplay and events. 
-         We focus on creativity, collaboration, and fun.</p>
-    </section>
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
 
-    <section>
-      <h2>Events</h2>
-      <p>Stay tuned for upcoming events and announcements. 
-         Our staff team works hard to keep the community active and engaging.</p>
-    </section>
-
-    <section>
-      <h2>Contact</h2>
-      <p>Need help or want to get involved? Reach out to us on Discord or through our contact page.</p>
+  <!-- Main content -->
+  <main class="content">
+    <section class="hero">
+      <h2>Welcome to Clearwater RP</h2>
+      <p>Immersive roleplay, community events, and a dedicated staff team.</p>
     </section>
   </main>
 
-  <!-- JavaScript for menu toggle -->
-  <script>
-    const toggle = document.getElementById("menu-toggle");
-    const menu = document.getElementById("menu");
-
-    toggle.addEventListener("click", () => {
-      menu.style.display = menu.style.display === "block" ? "none" : "block";
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
