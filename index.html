@@ -13,49 +13,18 @@
     <img src="assets/images/Clearwater.png" alt="Clearwater RP Banner" />
   </header>
 
-  <!-- Hamburger menu -->
-  <button class="hamburger" id="hamburger" aria-label="Open menu">
-    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-  </button>
-  <nav class="drawer" id="drawer">
-    <ul class="nav-list">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="events.html">Events</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="https://YOUR-RENDER-APP.onrender.com/auth/discord">Log in with Discord</a></li>
-      <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard">Staff Dashboard</a></li>
-    </ul>
-  </nav>
-  <div class="overlay" id="overlay"></div>
-
-  <!-- Status cards -->
+  <!-- Status cards side by side -->
   <main class="status-container">
     <section class="status-card" id="player-card">
-      <div id="player-count">Live Players: 0</div>
+      <div id="player-count">🔴 Live Players: 0</div>
     </section>
 
     <section class="status-card" id="session-card">
-      <div id="session-status">Session: SSD 🔴</div>
+      <div id="session-status">Session Shut Down 🔴</div>
     </section>
   </main>
 
   <script>
-    // Hamburger toggle
-    const hamburger = document.getElementById("hamburger");
-    const drawer = document.getElementById("drawer");
-    const overlay = document.getElementById("overlay");
-
-    function openDrawer() { drawer.classList.add("open"); overlay.classList.add("show"); }
-    function closeDrawer() { drawer.classList.remove("open"); overlay.classList.remove("show"); }
-
-    hamburger.addEventListener("click", () => {
-      drawer.classList.contains("open") ? closeDrawer() : openDrawer();
-    });
-    overlay.addEventListener("click", closeDrawer);
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
-
-    // Live status updater
     async function updateStatus() {
       try {
         const res = await fetch("https://YOUR-RENDER-APP.onrender.com/status");
@@ -63,36 +32,36 @@
 
         const players = data.players ?? 0;
         const playerEl = document.getElementById("player-count");
-        playerEl.textContent = "Live Players: " + players;
-
-        // Color coding for player card
         const playerCard = document.getElementById("player-card");
+
+        // Update text with emoji
+        playerEl.textContent = (players <= 5 ? "🔴" : players <= 15 ? "🟡" : "🟢") + " Live Players: " + players;
+
+        // Color + glow
         if (players <= 5) {
           playerCard.style.borderColor = "#ff4d4d";
-          playerEl.style.color = "#ff4d4d";
+          playerCard.style.boxShadow = "0 0 15px rgba(255,77,77,0.7)";
+          playerCard.style.background = "rgba(255,77,77,0.1)";
         } else if (players <= 15) {
           playerCard.style.borderColor = "#ffd633";
-          playerEl.style.color = "#ffd633";
+          playerCard.style.boxShadow = "0 0 15px rgba(255,214,51,0.7)";
+          playerCard.style.background = "rgba(255,214,51,0.1)";
         } else {
           playerCard.style.borderColor = "#63d1a1";
-          playerEl.style.color = "#63d1a1";
+          playerCard.style.boxShadow = "0 0 15px rgba(99,209,161,0.7)";
+          playerCard.style.background = "rgba(99,209,161,0.1)";
         }
 
-        // Session card
+        // Session card stays SSD for now
         const sessionEl = document.getElementById("session-status");
         const sessionCard = document.getElementById("session-card");
-        if (data.sessionActive) {
-          sessionEl.textContent = "Session: SSU 🟢";
-          sessionEl.style.color = "#63d1a1";
-          sessionCard.style.borderColor = "#63d1a1";
-        } else {
-          sessionEl.textContent = "Session: SSD 🔴";
-          sessionEl.style.color = "#ff4d4d";
-          sessionCard.style.borderColor = "#ff4d4d";
-        }
+        sessionEl.textContent = "Session Shut Down 🔴";
+        sessionCard.style.borderColor = "#ff4d4d";
+        sessionCard.style.boxShadow = "0 0 15px rgba(255,77,77,0.7)";
+        sessionCard.style.background = "rgba(255,77,77,0.1)";
       } catch {
-        document.getElementById("player-count").textContent = "Live Players: 0";
-        document.getElementById("session-status").textContent = "Session: SSD 🔴";
+        document.getElementById("player-count").textContent = "🔴 Live Players: 0";
+        document.getElementById("session-status").textContent = "Session Shut Down 🔴";
       }
     }
     updateStatus();
