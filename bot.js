@@ -20,11 +20,33 @@ client.once("ready", () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
-// Simple !ping command
+// !ping command
 client.on("messageCreate", (message) => {
-  if (message.author.bot) return; // ignore bots
+  if (message.author.bot) return;
+
   if (message.content === "!ping") {
     message.reply("🏓 Pong!");
+  }
+
+  // !status command
+  if (message.content === "!status") {
+    (async () => {
+      try {
+        const response = await fetch("https://api.policeroleplay.community/v1/server/players", {
+          headers: { "Server-Key": process.env.ERLC_API_KEY }
+        });
+
+        if (!response.ok) throw new Error("ERLC API error: " + response.status);
+
+        const data = await response.json();
+        const playerCount = data.players ? data.players.length : 0;
+
+        message.reply(`📊 Current player count: ${playerCount}`);
+      } catch (err) {
+        console.error(err);
+        message.reply("⚠️ Could not fetch player count from ER:LC API.");
+      }
+    })();
   }
 });
 
@@ -32,7 +54,7 @@ client.on("messageCreate", (message) => {
 client.login(process.env.DISCORD_TOKEN);
 
 // --------------------
-// ER:LC Status API
+// ER:LC Status API (for website)
 // --------------------
 app.get("/status", async (req, res) => {
   try {
@@ -47,7 +69,7 @@ app.get("/status", async (req, res) => {
 
     res.json({
       players: playerCount,
-      sessionActive: false
+      sessionActive: true
     });
   } catch (err) {
     console.error(err);
