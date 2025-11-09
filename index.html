@@ -8,5 +8,42 @@
 </head>
 <body>
   <img src="assets/images/Clearwater.png" alt="Clearwater RP Banner" class="fullscreen-banner" />
+
+  <main>
+    <div class="status-section">
+      <div class="player-count">
+        👥 Live Players: <span id="playerCount">--</span>
+      </div>
+
+      <div class="session-status ssd">
+        🔴 Session Shut Down
+      </div>
+    </div>
+  </main>
+
+  <script>
+    async function fetchPlayerCount() {
+      try {
+        const response = await fetch("https://api.policeroleplay.community/v1/server/status", {
+          method: "GET",
+          headers: {
+            "Server-Key": "NGZgZZKUEpfJSCSCwOkO-sEarVbjnxzHoinPxyChXBbvpmWopIIwVJuTNtpME"
+          }
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch");
+
+        const data = await response.json();
+        const count = data?.players?.length ?? "--";
+        document.getElementById("playerCount").textContent = count;
+      } catch (error) {
+        console.error("Error fetching player count:", error);
+        document.getElementById("playerCount").textContent = "N/A";
+      }
+    }
+
+    fetchPlayerCount();
+    setInterval(fetchPlayerCount, 30000);
+  </script>
 </body>
 </html>
