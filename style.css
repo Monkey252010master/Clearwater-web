@@ -46,11 +46,19 @@ body {
 
 /* Content */
 .content { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-.hero, .section, .status-panel {
+.hero, .section, .invite, .status-panel {
   background: #12151a;
   border: 1px solid #20232a;
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
 }
-.status-panel h3 { margin-top: 0; color: #4da3ff; }
+.hero h2, .section h3, .invite h3, .status-panel h3 { margin-top: 0; }
+
+/* Status panel rows */
+.status-row {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px 0;
+}
