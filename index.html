@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Banner -->
   <img src="assets/images/Clearwater.png" alt="Clearwater RP Banner" class="fullscreen-banner" />
 
+  <!-- Status Section -->
   <main>
     <div class="status-section">
       <div id="playerStatus" class="player-status">
@@ -21,10 +23,11 @@
     </div>
   </main>
 
+  <!-- Script for Player Count -->
   <script>
     async function fetchPlayerCount() {
       try {
-        const response = await fetch("https://api.policeroleplay.community/v1/server/status", {
+        const response = await fetch("https://api.policeroleplay.community/v1/server/players", {
           method: "GET",
           headers: {
             "Server-Key": "NGZgZZKUEpfJSCSCwOkO-sEarVbjnxzHoinPxyChXBbvpmWopIIwVJuTNtpME"
@@ -32,23 +35,21 @@
         });
 
         const data = await response.json();
-        console.log("Full API response:", data); // Debug log
+        console.log("Player API response:", data); // Debug log
 
-        // Try to extract player count safely
-        let count = 0;
-        if (Array.isArray(data?.players)) {
-          count = data.players.length;
-        } else if (Array.isArray(data?.server?.players)) {
-          count = data.server.players.length;
-        }
+        // ERLC /server/players returns an array of player objects
+        const players = Array.isArray(data) ? data : [];
+        const count = players.length;
 
         const countSpan = document.getElementById("playerCount");
         const statusBox = document.getElementById("playerStatus");
 
         countSpan.textContent = count;
 
+        // Reset classes
         statusBox.classList.remove("low", "medium", "high");
 
+        // Apply color-coded class
         if (count <= 5) {
           statusBox.classList.add("low");
         } else if (count <= 15) {
@@ -63,6 +64,7 @@
       }
     }
 
+    // Fetch immediately and every 30s
     fetchPlayerCount();
     setInterval(fetchPlayerCount, 30000);
   </script>
