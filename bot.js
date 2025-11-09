@@ -8,11 +8,14 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Hardcoded guild and staff role IDs
+// Hardcoded IDs and OAuth credentials
 const GUILD_ID = "1411784213795045518";
 const STAFF_ROLE_ID = "1416789375529783329";
+const DISCORD_CLIENT_ID = "PUT_YOUR_CLIENT_ID_HERE";
+const DISCORD_CLIENT_SECRET = "PUT_YOUR_CLIENT_SECRET_HERE";
+const DISCORD_REDIRECT_URI = "https://YOUR-RENDER-APP.onrender.com/auth/discord/callback";
 
-// Session setup (use a strong random secret in production)
+// Session setup
 app.use(
   session({
     secret: "replace-with-a-long-random-string",
@@ -28,9 +31,9 @@ passport.deserializeUser((obj, done) => done(null, obj));
 passport.use(
   new DiscordStrategy(
     {
-      clientID: process.env.DISCORD_CLIENT_ID,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET,
-      callbackURL: process.env.DISCORD_REDIRECT_URI,
+      clientID: DISCORD_CLIENT_ID,
+      clientSecret: DISCORD_CLIENT_SECRET,
+      callbackURL: DISCORD_REDIRECT_URI,
       scope: ["identify"]
     },
     (accessToken, refreshToken, profile, done) => {
@@ -72,8 +75,7 @@ app.get(
   "/auth/discord/callback",
   passport.authenticate("discord", { failureRedirect: "/" }),
   (req, res) => {
-    // After login, go back to homepage
-    res.redirect("/");
+    res.redirect("/"); // back to homepage after login
   }
 );
 
@@ -97,7 +99,7 @@ async function userIsStaff(userId) {
   }
 }
 
-// Staff dashboard (protected)
+// Staff dashboard
 app.get("/dashboard", async (req, res) => {
   if (!req.user) {
     return res.send(`
