@@ -20,15 +20,16 @@ client.once("ready", () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
-// !ping command
+// Commands
 client.on("messageCreate", (message) => {
   if (message.author.bot) return;
 
+  // !ping
   if (message.content === "!ping") {
     message.reply("🏓 Pong!");
   }
 
-  // !status command
+  // !status
   if (message.content === "!status") {
     (async () => {
       try {
@@ -36,11 +37,14 @@ client.on("messageCreate", (message) => {
           headers: { "Server-Key": process.env.ERLC_API_KEY }
         });
 
+        console.log("API response status:", response.status);
+
         if (!response.ok) throw new Error("ERLC API error: " + response.status);
 
         const data = await response.json();
-        const playerCount = data.players ? data.players.length : 0;
+        console.log("API response body:", data);
 
+        const playerCount = data.players ? data.players.length : 0;
         message.reply(`📊 Current player count: ${playerCount}`);
       } catch (err) {
         console.error(err);
