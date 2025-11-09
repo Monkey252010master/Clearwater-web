@@ -8,93 +8,50 @@
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
-    <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
-    </button>
-    <h1 class="site-title">Clearwater RP</h1>
+  <!-- Banner image -->
+  <header class="banner">
+    <img src="banner.png" alt="Clearwater RP Banner" />
   </header>
 
-  <!-- Drawer menu -->
-  <nav class="drawer" id="drawer">
-    <ul class="nav-list">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="about.html">About</a></li>
-      <li><a href="events.html">Events</a></li>
-      <li><a href="contact.html">Contact</a></li>
-      <li><a href="https://YOUR-RENDER-APP.onrender.com/auth/discord" target="_blank">Log in with Discord</a></li>
-      <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard" target="_blank">Staff Dashboard</a></li>
-    </ul>
+  <!-- Status rectangle -->
+  <section class="status-card">
+    <div id="player-count">Live Players: …</div>
+    <div id="session-status">Session: …</div>
+  </section>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="https://YOUR-RENDER-APP.onrender.com/auth/discord">Log in with Discord</a>
+    <a href="https://YOUR-RENDER-APP.onrender.com/dashboard">Staff Dashboard</a>
   </nav>
-  <div class="overlay" id="overlay"></div>
 
-  <!-- Main content -->
-  <main class="content">
-    <section class="hero">
-      <h2>Welcome to Clearwater RP</h2>
-      <p>Immersive roleplay, community events, and a dedicated staff team.</p>
-    </section>
-
-    <!-- Logo + Invite -->
-    <section class="invite">
-      <h3>Join Us</h3>
-      <p><strong>Discord:</strong> <a href="https://discord.gg/6hWA8Fk25N" target="_blank">discord.gg/6hWA8Fk25N</a></p>
-      <p><strong>Server Code:</strong> CLWTRP</p>
-    </section>
-
-    <!-- Status Panel -->
-    <section class="status-panel">
-      <div class="status-row" id="player-count">Live Players: …</div>
-      <div class="status-row" id="session-status">Session: …</div>
-    </section>
-
-    <section class="section">
-      <h3>About Us</h3>
-      <p>Clearwater RP is built for creativity and collaboration. We host regular events and encourage player‑driven stories.</p>
-    </section>
-
-    <section class="section">
-      <h3>Events</h3>
-      <p>Watch this space for upcoming event announcements and schedules.</p>
-    </section>
-
-    <section class="section">
-      <h3>Contact</h3>
-      <p>Questions or suggestions? Reach us on Discord or via our contact page.</p>
-    </section>
-  </main>
-
-  <!-- Script -->
   <script>
-    // Hamburger toggle
-    const hamburger = document.getElementById("hamburger");
-    const drawer = document.getElementById("drawer");
-    const overlay = document.getElementById("overlay");
-
-    function openDrawer() { drawer.classList.add("open"); overlay.classList.add("show"); }
-    function closeDrawer() { drawer.classList.remove("open"); overlay.classList.remove("show"); }
-
-    hamburger.addEventListener("click", () => {
-      drawer.classList.contains("open") ? closeDrawer() : openDrawer();
-    });
-    overlay.addEventListener("click", closeDrawer);
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
-
-    // Live status updater
     async function updateStatus() {
       try {
         const res = await fetch("https://YOUR-RENDER-APP.onrender.com/status");
         const data = await res.json();
-        document.getElementById("player-count").textContent = "Live Players: " + data.players;
-        document.getElementById("session-status").textContent = "Session: " + (data.sessionActive ? "🟢 Active" : "🔴 Shut Down");
-      } catch (err) {
+
+        const playerEl = document.getElementById("player-count");
+        playerEl.textContent = "Live Players: " + data.players;
+
+        // Color coding
+        if (data.players <= 5) {
+          playerEl.style.color = "#ff4d4d"; // red
+        } else if (data.players <= 15) {
+          playerEl.style.color = "#ffd633"; // yellow
+        } else {
+          playerEl.style.color = "#63d1a1"; // green
+        }
+
+        document.getElementById("session-status").textContent =
+          "Session: " + (data.sessionActive ? "SSU 🟢" : "SSD 🔴");
+      } catch {
         document.getElementById("player-count").textContent = "Live Players: N/A";
         document.getElementById("session-status").textContent = "Session: N/A";
       }
     }
     updateStatus();
-    setInterval(updateStatus, 5000); // refresh every 5s
+    setInterval(updateStatus, 5000);
   </script>
 </body>
 </html>
