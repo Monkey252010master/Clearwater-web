@@ -34,30 +34,34 @@
         const playerEl = document.getElementById("player-count");
         const playerCard = document.getElementById("player-card");
 
-        // Update text with emoji
-        playerEl.textContent = (players <= 5 ? "🔴" : players <= 15 ? "🟡" : "🟢") + " Live Players: " + players;
+        // Emoji + text
+        let emoji = "🔴";
+        if (players <= 5) emoji = "🔴";
+        else if (players <= 15) emoji = "🟡";
+        else emoji = "🟢";
+        playerEl.textContent = `${emoji} Live Players: ${players}`;
 
-        // Color + glow
+        // Glow + color
         if (players <= 5) {
           playerCard.style.borderColor = "#ff4d4d";
-          playerCard.style.boxShadow = "0 0 15px rgba(255,77,77,0.7)";
+          playerCard.style.boxShadow = "0 0 20px rgba(255,77,77,0.8)";
           playerCard.style.background = "rgba(255,77,77,0.1)";
         } else if (players <= 15) {
           playerCard.style.borderColor = "#ffd633";
-          playerCard.style.boxShadow = "0 0 15px rgba(255,214,51,0.7)";
+          playerCard.style.boxShadow = "0 0 20px rgba(255,214,51,0.8)";
           playerCard.style.background = "rgba(255,214,51,0.1)";
         } else {
           playerCard.style.borderColor = "#63d1a1";
-          playerCard.style.boxShadow = "0 0 15px rgba(99,209,161,0.7)";
+          playerCard.style.boxShadow = "0 0 20px rgba(99,209,161,0.8)";
           playerCard.style.background = "rgba(99,209,161,0.1)";
         }
 
-        // Session card stays SSD for now
+        // Session card always SSD for now
         const sessionEl = document.getElementById("session-status");
         const sessionCard = document.getElementById("session-card");
         sessionEl.textContent = "Session Shut Down 🔴";
         sessionCard.style.borderColor = "#ff4d4d";
-        sessionCard.style.boxShadow = "0 0 15px rgba(255,77,77,0.7)";
+        sessionCard.style.boxShadow = "0 0 20px rgba(255,77,77,0.8)";
         sessionCard.style.background = "rgba(255,77,77,0.1)";
       } catch {
         document.getElementById("player-count").textContent = "🔴 Live Players: 0";
