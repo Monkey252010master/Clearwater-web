@@ -1,21 +1,50 @@
-/* Reset everything */
+/* Reset and fullscreen image */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Make body and html fill the screen */
 html, body {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  background: black;
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  overflow-x: hidden;
 }
 
-/* Fullscreen image */
 .fullscreen-banner {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
   display: block;
+}
+
+/* Status section */
+main {
+  padding: 2em;
+  text-align: center;
+}
+
+.status-section {
+  margin-top: 2em;
+}
+
+.player-count {
+  font-size: 1.5em;
+  margin-bottom: 1em;
+}
+
+/* Session status styles */
+.session-status {
+  display: inline-block;
+  padding: 1em 2em;
+  border-radius: 12px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: white;
+  background: rgba(255, 0, 0, 0.85);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+  transition: all 0.3s ease;
 }
