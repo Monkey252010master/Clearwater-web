@@ -1,39 +1,21 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
+/* Reset everything */
+* {
   margin: 0;
-  background: #eef6f9;
-  color: #333;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-header {
-  background: #005f73;
-  color: white;
-  padding: 1em;
-  text-align: center;
+/* Make body and html fill the screen */
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
-nav a {
-  margin: 0 1em;
-  color: #dff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-main {
-  padding: 2em;
-}
-
-section {
-  margin-bottom: 3em;
-  background: white;
-  padding: 1em;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.05);
-}
-
-footer {
-  text-align: center;
-  padding: 1em;
-  background: #005f73;
-  color: white;
+/* Fullscreen image */
+.fullscreen-banner {
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  display: block;
 }
