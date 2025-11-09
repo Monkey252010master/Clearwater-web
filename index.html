@@ -13,45 +13,90 @@
     <img src="assets/images/Clearwater.png" alt="Clearwater RP Banner" />
   </header>
 
-  <!-- Status rectangle -->
-  <section class="status-card">
-    <div id="player-count">Live Players: …</div>
-    <div id="session-status">Session: …</div>
-  </section>
-
-  <!-- Navigation -->
-  <nav class="nav">
-    <a href="https://YOUR-RENDER-APP.onrender.com/auth/discord">Log in with Discord</a>
-    <a href="https://YOUR-RENDER-APP.onrender.com/dashboard">Staff Dashboard</a>
+  <!-- Hamburger menu -->
+  <button class="hamburger" id="hamburger" aria-label="Open menu">
+    <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+  </button>
+  <nav class="drawer" id="drawer">
+    <ul class="nav-list">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="https://YOUR-RENDER-APP.onrender.com/auth/discord">Log in with Discord</a></li>
+      <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard">Staff Dashboard</a></li>
+    </ul>
   </nav>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Status cards -->
+  <main class="status-container">
+    <section class="status-card" id="player-card">
+      <div id="player-count">Live Players: 0</div>
+    </section>
+
+    <section class="status-card" id="session-card">
+      <div id="session-status">Session: SSD 🔴</div>
+    </section>
+  </main>
 
   <script>
+    // Hamburger toggle
+    const hamburger = document.getElementById("hamburger");
+    const drawer = document.getElementById("drawer");
+    const overlay = document.getElementById("overlay");
+
+    function openDrawer() { drawer.classList.add("open"); overlay.classList.add("show"); }
+    function closeDrawer() { drawer.classList.remove("open"); overlay.classList.remove("show"); }
+
+    hamburger.addEventListener("click", () => {
+      drawer.classList.contains("open") ? closeDrawer() : openDrawer();
+    });
+    overlay.addEventListener("click", closeDrawer);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+
+    // Live status updater
     async function updateStatus() {
       try {
         const res = await fetch("https://YOUR-RENDER-APP.onrender.com/status");
         const data = await res.json();
 
+        const players = data.players ?? 0;
         const playerEl = document.getElementById("player-count");
-        playerEl.textContent = "Live Players: " + data.players;
+        playerEl.textContent = "Live Players: " + players;
 
-        // Color coding
-        if (data.players <= 5) {
-          playerEl.style.color = "#ff4d4d"; // red
-        } else if (data.players <= 15) {
-          playerEl.style.color = "#ffd633"; // yellow
+        // Color coding for player card
+        const playerCard = document.getElementById("player-card");
+        if (players <= 5) {
+          playerCard.style.borderColor = "#ff4d4d";
+          playerEl.style.color = "#ff4d4d";
+        } else if (players <= 15) {
+          playerCard.style.borderColor = "#ffd633";
+          playerEl.style.color = "#ffd633";
         } else {
-          playerEl.style.color = "#63d1a1"; // green
+          playerCard.style.borderColor = "#63d1a1";
+          playerEl.style.color = "#63d1a1";
         }
 
-        document.getElementById("session-status").textContent =
-          "Session: " + (data.sessionActive ? "SSU 🟢" : "SSD 🔴");
+        // Session card
+        const sessionEl = document.getElementById("session-status");
+        const sessionCard = document.getElementById("session-card");
+        if (data.sessionActive) {
+          sessionEl.textContent = "Session: SSU 🟢";
+          sessionEl.style.color = "#63d1a1";
+          sessionCard.style.borderColor = "#63d1a1";
+        } else {
+          sessionEl.textContent = "Session: SSD 🔴";
+          sessionEl.style.color = "#ff4d4d";
+          sessionCard.style.borderColor = "#ff4d4d";
+        }
       } catch {
-        document.getElementById("player-count").textContent = "Live Players: N/A";
-        document.getElementById("session-status").textContent = "Session: N/A";
+        document.getElementById("player-count").textContent = "Live Players: 0";
+        document.getElementById("session-status").textContent = "Session: SSD 🔴";
       }
     }
     updateStatus();
-    setInterval(updateStatus, 5000); // refresh every 5s
+    setInterval(updateStatus, 5000);
   </script>
 </body>
 </html>
