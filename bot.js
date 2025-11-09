@@ -1,19 +1,22 @@
 // bot.js
 const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
+const DiscordStrategy = require("passport-discord").Strategy;
 const { Client, GatewayIntentBits } = require("discord.js");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Hardcoded IDs
-const GUILD_ID = "1411784213795045518";       // Your guild ID
-const STAFF_ROLE_ID = "1416789375529783329";  // Your staff role ID
+const GUILD_ID = "1411784213795045518";
+const STAFF_ROLE_ID = "1416789375529783329";
 
 // Discord bot setup
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers, // needed to fetch roles
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
   ]
@@ -21,13 +24,9 @@ const client = new Client({
 
 client.once("ready", () => {
   console.log(`✅ Bot logged in as ${client.user.tag}`);
-
-  // Custom status
   client.user.setPresence({
     status: "online",
-    activities: [
-      { name: "over Clearwater RP", type: 3 } // Watching
-    ]
+    activities: [{ name: "over Clearwater RP", type: 3 }]
   });
 });
 
@@ -38,34 +37,74 @@ client.on("messageCreate", (message) => {
   }
 });
 
-// Staff dashboard route
+// Session setup
+app.use(
+  session({
+    secret: "super-secret", // replace with a random string
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
+// Passport setup
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+passport.use(
+  new DiscordStrategy(
+    {
+      clientID: process.env.DISCORD_CLIENT_ID,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET,
+      callbackURL: process.env.DISCORD_REDIRECT_URI,
+      scope: ["identify"]
+    },
+    (accessToken, refreshToken, profile, done) => {
+      return done(null, profile);
+    }
+  )
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Routes
+app.get("/auth/discord", passport.authenticate("discord"));
+app.get(
+  "/auth/discord/callback",
+  passport.authenticate("discord", { failureRedirect: "/" }),
+  (req, res) => {
+    res.redirect("/dashboard");
+  }
+);
+
 app.get("/dashboard", async (req, res) => {
-  // For now, we’ll just demonstrate with a placeholder user ID.
-  // Later, this will come from Discord login (OAuth2).
-  const userId = "PUT_A_TEST_USER_ID_HERE";
+  if (!req.user) {
+    return res.send(`
+      <h1>Staff Dashboard</h1>
+      <p>You must log in with Discord.</p>
+      <a href="/auth/discord">Log in with Discord</a>
+    `);
+  }
 
   try {
     const guild = await client.guilds.fetch(GUILD_ID);
-    const member = await guild.members.fetch(userId);
+    const member = await guild.members.fetch(req.user.id);
     const isStaff = member.roles.cache.has(STAFF_ROLE_ID);
 
     if (isStaff) {
       res.send(`
         <h1>Staff Dashboard</h1>
-        <p>Welcome, ${member.user.username}! You have staff access ✅</p>
+        <p>Welcome, ${req.user.username}! ✅</p>
       `);
     } else {
-      res.send(`
-        <h1>Access Denied</h1>
-        <p>You do not have the staff role.</p>
-      `);
+      res.send("<h1>Access Denied</h1><p>You are not staff.</p>");
     }
   } catch (err) {
     res.send("<h1>Error</h1><p>Could not fetch member info.</p>");
   }
 });
 
-// Start web server
+// Start server
 app.listen(PORT, () => {
   console.log(`🌐 Web server running on port ${PORT}`);
 });
