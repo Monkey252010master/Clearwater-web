@@ -15,11 +15,11 @@
 
   <!-- Status cards -->
   <main class="status-container">
-    <section class="status-card" id="player-card">
+    <section class="status-card red" id="player-card">
       <div id="player-count">🔴 Live Players: 0</div>
     </section>
 
-    <section class="status-card" id="session-card">
+    <section class="status-card red" id="session-card">
       <div id="session-status">Session Shut Down 🔴</div>
     </section>
   </main>
@@ -36,19 +36,13 @@
 
         // Emoji + text
         let emoji = "🔴";
-        if (players <= 5) emoji = "🔴";
-        else if (players <= 15) emoji = "🟡";
-        else emoji = "🟢";
-        playerEl.textContent = `${emoji} Live Players: ${players}`;
+        let colorClass = "red";
+        if (players <= 5) { emoji = "🔴"; colorClass = "red"; }
+        else if (players <= 15) { emoji = "🟡"; colorClass = "yellow"; }
+        else { emoji = "🟢"; colorClass = "green"; }
 
-        // Glow + color
-        if (players <= 5) {
-          playerCard.className = "status-card red";
-        } else if (players <= 15) {
-          playerCard.className = "status-card yellow";
-        } else {
-          playerCard.className = "status-card green";
-        }
+        playerEl.textContent = `${emoji} Live Players: ${players}`;
+        playerCard.className = `status-card ${colorClass}`;
 
         // Session card always SSD for now
         const sessionEl = document.getElementById("session-status");
