@@ -27,7 +27,6 @@
       <li><a href="https://YOUR-RENDER-APP.onrender.com/dashboard" target="_blank">Staff Dashboard</a></li>
     </ul>
   </nav>
-
   <div class="overlay" id="overlay"></div>
 
   <!-- Main content -->
@@ -37,10 +36,17 @@
       <p>Immersive roleplay, community events, and a dedicated staff team.</p>
     </section>
 
+    <!-- Logo + Invite -->
+    <section class="invite">
+      <h3>Join Us</h3>
+      <p><strong>Discord:</strong> <a href="https://discord.gg/6hWA8Fk25N" target="_blank">discord.gg/6hWA8Fk25N</a></p>
+      <p><strong>Server Code:</strong> CLWTRP</p>
+    </section>
+
+    <!-- Status Panel -->
     <section class="status-panel">
-      <h3>Server Status</h3>
-      <p id="player-count">Live Players: …</p>
-      <p id="session-status">Session: …</p>
+      <div class="status-row" id="player-count">Live Players: …</div>
+      <div class="status-row" id="session-status">Session: …</div>
     </section>
 
     <section class="section">
@@ -59,6 +65,7 @@
     </section>
   </main>
 
+  <!-- Script -->
   <script>
     // Hamburger toggle
     const hamburger = document.getElementById("hamburger");
@@ -80,7 +87,7 @@
         const res = await fetch("https://YOUR-RENDER-APP.onrender.com/status");
         const data = await res.json();
         document.getElementById("player-count").textContent = "Live Players: " + data.players;
-        document.getElementById("session-status").textContent = "Session: " + (data.sessionActive ? "Active" : "Shut Down");
+        document.getElementById("session-status").textContent = "Session: " + (data.sessionActive ? "🟢 Active" : "🔴 Shut Down");
       } catch (err) {
         document.getElementById("player-count").textContent = "Live Players: N/A";
         document.getElementById("session-status").textContent = "Session: N/A";
