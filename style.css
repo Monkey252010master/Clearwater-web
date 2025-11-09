@@ -16,70 +16,19 @@ body {
 .status-container {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 30px;
   margin: 40px auto;
   flex-wrap: wrap;
 }
 
 /* Individual status card */
 .status-card {
-  background: #12151a;
   border: 3px solid #20232a;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 20px;
-  width: 200px;
+  width: 220px;
   font-size: 1.2em;
   font-weight: bold;
+  transition: all 0.3s ease;
+  background: rgba(255,255,255,0.05); /* transparent look */
 }
-
-/* Hamburger */
-.hamburger {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  width: 40px;
-  height: 40px;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  z-index: 1100;
-}
-.bar {
-  width: 25px;
-  height: 3px;
-  background: #fff;
-  display: block;
-  margin: 5px auto;
-}
-
-/* Drawer menu */
-.drawer {
-  position: fixed;
-  top: 0; left: -250px;
-  width: 220px; height: 100%;
-  background: #16181d;
-  padding: 20px;
-  transition: left 0.3s ease;
-  z-index: 1000;
-}
-.drawer.open { left: 0; }
-.nav-list { list-style: none; padding: 0; margin: 0; }
-.nav-list li { margin-bottom: 10px; }
-.nav-list li a {
-  color: #e8e8e8;
-  text-decoration: none;
-  display: block;
-  padding: 10px;
-  border-radius: 4px;
-}
-.nav-list li a:hover { background: #20232a; }
-
-/* Overlay */
-.overlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4);
-  opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 900;
-}
-.overlay.show { opacity: 1; pointer-events: auto; }
