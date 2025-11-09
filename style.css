@@ -21,7 +21,7 @@ body {
   flex-wrap: wrap;
 }
 
-/* Individual status card */
+/* Base card */
 .status-card {
   border: 3px solid #20232a;
   border-radius: 16px;
@@ -32,4 +32,24 @@ body {
   transition: all 0.3s ease;
   background: rgba(255,255,255,0.05); /* transparent base */
   box-shadow: 0 0 15px rgba(255,255,255,0.2); /* default subtle glow */
+}
+
+/* Color states */
+.status-card.red {
+  border-color: #ff4d4d;
+  box-shadow: 0 0 20px rgba(255,77,77,0.8);
+  background: rgba(255,77,77,0.1);
+  color: #ff4d4d;
+}
+.status-card.yellow {
+  border-color: #ffd633;
+  box-shadow: 0 0 20px rgba(255,214,51,0.8);
+  background: rgba(255,214,51,0.1);
+  color: #ffd633;
+}
+.status-card.green {
+  border-color: #63d1a1;
+  box-shadow: 0 0 20px rgba(99,209,161,0.8);
+  background: rgba(99,209,161,0.1);
+  color: #63d1a1;
 }
