@@ -16,9 +16,10 @@ html, body {
 
 /* Banner image */
 .fullscreen-banner {
-  width: 100%;
-  height: auto;
   display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
 }
 
 /* Main content */
