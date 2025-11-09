@@ -8,12 +8,12 @@
 </head>
 <body>
 
-  <!-- Banner image -->
+  <!-- Banner -->
   <header class="banner">
     <img src="assets/images/Clearwater.png" alt="Clearwater RP Banner" />
   </header>
 
-  <!-- Status cards side by side -->
+  <!-- Status cards -->
   <main class="status-container">
     <section class="status-card" id="player-card">
       <div id="player-count">🔴 Live Players: 0</div>
@@ -43,29 +43,23 @@
 
         // Glow + color
         if (players <= 5) {
-          playerCard.style.borderColor = "#ff4d4d";
-          playerCard.style.boxShadow = "0 0 20px rgba(255,77,77,0.8)";
-          playerCard.style.background = "rgba(255,77,77,0.1)";
+          playerCard.className = "status-card red";
         } else if (players <= 15) {
-          playerCard.style.borderColor = "#ffd633";
-          playerCard.style.boxShadow = "0 0 20px rgba(255,214,51,0.8)";
-          playerCard.style.background = "rgba(255,214,51,0.1)";
+          playerCard.className = "status-card yellow";
         } else {
-          playerCard.style.borderColor = "#63d1a1";
-          playerCard.style.boxShadow = "0 0 20px rgba(99,209,161,0.8)";
-          playerCard.style.background = "rgba(99,209,161,0.1)";
+          playerCard.className = "status-card green";
         }
 
         // Session card always SSD for now
         const sessionEl = document.getElementById("session-status");
         const sessionCard = document.getElementById("session-card");
         sessionEl.textContent = "Session Shut Down 🔴";
-        sessionCard.style.borderColor = "#ff4d4d";
-        sessionCard.style.boxShadow = "0 0 20px rgba(255,77,77,0.8)";
-        sessionCard.style.background = "rgba(255,77,77,0.1)";
+        sessionCard.className = "status-card red";
       } catch {
         document.getElementById("player-count").textContent = "🔴 Live Players: 0";
         document.getElementById("session-status").textContent = "Session Shut Down 🔴";
+        document.getElementById("player-card").className = "status-card red";
+        document.getElementById("session-card").className = "status-card red";
       }
     }
     updateStatus();
