@@ -2,7 +2,7 @@ const express = require("express");
 const fetch = require("node-fetch");
 const app = express();
 
-// Status route that talks to ER:LC API
+// Status route that queries ER:LC API
 app.get("/status", async (req, res) => {
   try {
     const response = await fetch("https://api.policeroleplay.community/v1/server/players", {
@@ -28,5 +28,6 @@ app.get("/status", async (req, res) => {
   }
 });
 
-// If you don’t already have this:
-app.listen(3000, () => console.log("Bot backend running on port 3000"));
+// Run server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Bot backend running on port ${PORT}`));
