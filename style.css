@@ -16,8 +16,8 @@ body {
 .status-container {
   display: flex;
   justify-content: center;
-  gap: 30px;
-  margin: 40px auto;
+  gap: 40px;
+  margin: 50px auto;
   flex-wrap: wrap;
 }
 
@@ -25,10 +25,11 @@ body {
 .status-card {
   border: 3px solid #20232a;
   border-radius: 16px;
-  padding: 20px;
-  width: 220px;
-  font-size: 1.2em;
+  padding: 25px;
+  width: 240px;
+  font-size: 1.3em;
   font-weight: bold;
   transition: all 0.3s ease;
-  background: rgba(255,255,255,0.05); /* transparent look */
+  background: rgba(255,255,255,0.05); /* transparent base */
+  box-shadow: 0 0 15px rgba(255,255,255,0.2); /* default subtle glow */
 }
