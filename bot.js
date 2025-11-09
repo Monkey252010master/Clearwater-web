@@ -5,10 +5,15 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Hardcoded IDs
+const GUILD_ID = "1411784213795045518";       // Your guild ID
+const STAFF_ROLE_ID = "1416789375529783329";  // Your staff role ID
+
 // Discord bot setup
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers, // needed to fetch roles
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
   ]
@@ -19,12 +24,9 @@ client.once("ready", () => {
 
   // Custom status
   client.user.setPresence({
-    status: "online", // green dot
+    status: "online",
     activities: [
-      {
-        name: "over Clearwater RP", // 👀 custom message
-        type: 3 // Watching
-      }
+      { name: "over Clearwater RP", type: 3 } // Watching
     ]
   });
 });
@@ -37,11 +39,30 @@ client.on("messageCreate", (message) => {
 });
 
 // Staff dashboard route
-app.get("/dashboard", (req, res) => {
-  res.send(`
-    <h1>Staff Dashboard</h1>
-    <p>This is a placeholder page. Later we'll add Discord login + role checks.</p>
-  `);
+app.get("/dashboard", async (req, res) => {
+  // For now, we’ll just demonstrate with a placeholder user ID.
+  // Later, this will come from Discord login (OAuth2).
+  const userId = "PUT_A_TEST_USER_ID_HERE";
+
+  try {
+    const guild = await client.guilds.fetch(GUILD_ID);
+    const member = await guild.members.fetch(userId);
+    const isStaff = member.roles.cache.has(STAFF_ROLE_ID);
+
+    if (isStaff) {
+      res.send(`
+        <h1>Staff Dashboard</h1>
+        <p>Welcome, ${member.user.username}! You have staff access ✅</p>
+      `);
+    } else {
+      res.send(`
+        <h1>Access Denied</h1>
+        <p>You do not have the staff role.</p>
+      `);
+    }
+  } catch (err) {
+    res.send("<h1>Error</h1><p>Could not fetch member info.</p>");
+  }
 });
 
 // Start web server
