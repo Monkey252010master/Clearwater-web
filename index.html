@@ -27,14 +27,10 @@
   <script>
     async function updateStatus() {
       try {
-        const res = await fetch("https://api.policeroleplay.community/v1/server/players", {
-          headers: {
-            "Server-Key": "YOUR_ERLC_SERVER_KEY" // put your server key here
-          }
-        });
+        const res = await fetch("https://YOUR-RENDER-APP.onrender.com/status");
         const data = await res.json();
-        const players = data.players ? data.players.length : 0;
 
+        const players = data.players ?? 0;
         const playerEl = document.getElementById("player-count");
         const playerCard = document.getElementById("player-card");
 
@@ -48,15 +44,21 @@
         playerEl.textContent = `${emoji} Live Players: ${players}`;
         playerCard.className = `status-card ${colorClass}`;
 
-        // Session card stays SSD for now
+        // Session card
         const sessionEl = document.getElementById("session-status");
         const sessionCard = document.getElementById("session-card");
-        sessionEl.textContent = "Session Shut Down 🔴";
-        sessionCard.className = "status-card red";
-      } catch (err) {
-        console.error(err);
+        if (data.sessionActive) {
+          sessionEl.textContent = "Session Start Up 🟢";
+          sessionCard.className = "status-card green";
+        } else {
+          sessionEl.textContent = "Session Shut Down 🔴";
+          sessionCard.className = "status-card red";
+        }
+      } catch {
         document.getElementById("player-count").textContent = "🔴 Live Players: 0";
         document.getElementById("session-status").textContent = "Session Shut Down 🔴";
+        document.getElementById("player-card").className = "status-card red";
+        document.getElementById("session-card").className = "status-card red";
       }
     }
 
