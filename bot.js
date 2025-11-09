@@ -8,39 +8,14 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Hardcoded IDs
+// Hardcoded guild and staff role IDs
 const GUILD_ID = "1411784213795045518";
 const STAFF_ROLE_ID = "1416789375529783329";
-
-// Discord bot setup
-const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent
-  ]
-});
-
-client.once("ready", () => {
-  console.log(`✅ Bot logged in as ${client.user.tag}`);
-  client.user.setPresence({
-    status: "online",
-    activities: [{ name: "over Clearwater RP", type: 3 }]
-  });
-});
-
-// Simple command
-client.on("messageCreate", (message) => {
-  if (message.content === "!ping") {
-    message.reply("Pong! 🏓");
-  }
-});
 
 // Session setup
 app.use(
   session({
-    secret: "super-secret", // replace with a random string
+    secret: "replace-with-a-long-random-string",
     resave: false,
     saveUninitialized: false
   })
@@ -59,7 +34,12 @@ passport.use(
       scope: ["identify"]
     },
     (accessToken, refreshToken, profile, done) => {
-      return done(null, profile);
+      const user = {
+        id: profile.id,
+        username: profile.username,
+        avatar: profile.avatar
+      };
+      return done(null, user);
     }
   )
 );
@@ -67,16 +47,78 @@ passport.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Routes
+// Discord bot
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
+
+client.once("ready", () => {
+  console.log(`✅ Bot logged in as ${client.user.tag}`);
+  client.user.setPresence({
+    status: "online",
+    activities: [{ name: "over Clearwater RP", type: 3 }]
+  });
+});
+
+client.on("messageCreate", (message) => {
+  if (message.content === "!ping") {
+    message.reply("Pong! 🏓");
+  }
+});
+
+// Auth routes
 app.get("/auth/discord", passport.authenticate("discord"));
+
 app.get(
   "/auth/discord/callback",
   passport.authenticate("discord", { failureRedirect: "/" }),
   (req, res) => {
-    res.redirect("/dashboard");
+    // After login, send them back to homepage
+    res.redirect("/");
   }
 );
 
+app.get("/auth/logout", (req, res) => {
+  req.logout(() => {
+    req.session.destroy(() => {
+      res.clearCookie("connect.sid");
+      res.redirect("/");
+    });
+  });
+});
+
+// Helpers
+async function userIsStaff(userId) {
+  try {
+    const guild = await client.guilds.fetch(GUILD_ID);
+    const member = await guild.members.fetch(userId);
+    return member.roles.cache.has(STAFF_ROLE_ID);
+  } catch {
+    return false;
+  }
+}
+
+// Homepage
+app.get("/", (req, res) => {
+  const loggedIn = req.user ? true : false;
+  res.send(`
+    <h1>Clearwater RP Homepage</h1>
+    <p>Welcome to the site.</p>
+    ${
+      loggedIn
+        ? `<p>Logged in as ${req.user.username} | <a href="/auth/logout">Log out</a></p>`
+        : `<a href="/auth/discord">Log in with Discord</a>`
+    }
+    <p><a href="/dashboard">Go to Staff Dashboard</a></p>
+  `);
+});
+
+// Staff dashboard (protected)
 app.get("/dashboard", async (req, res) => {
   if (!req.user) {
     return res.send(`
@@ -86,28 +128,25 @@ app.get("/dashboard", async (req, res) => {
     `);
   }
 
-  try {
-    const guild = await client.guilds.fetch(GUILD_ID);
-    const member = await guild.members.fetch(req.user.id);
-    const isStaff = member.roles.cache.has(STAFF_ROLE_ID);
-
-    if (isStaff) {
-      res.send(`
-        <h1>Staff Dashboard</h1>
-        <p>Welcome, ${req.user.username}! ✅</p>
-      `);
-    } else {
-      res.send("<h1>Access Denied</h1><p>You are not staff.</p>");
-    }
-  } catch (err) {
-    res.send("<h1>Error</h1><p>Could not fetch member info.</p>");
+  const isStaff = await userIsStaff(req.user.id);
+  if (!isStaff) {
+    return res.status(403).send(`
+      <h1>Access Denied</h1>
+      <p>Your account is not marked as staff.</p>
+      <p><a href="/auth/logout">Log out</a></p>
+    `);
   }
+
+  res.send(`
+    <h1>Staff Dashboard</h1>
+    <p>Welcome, ${req.user.username}! ✅ Staff verified.</p>
+    <p><a href="/auth/logout">Log out</a></p>
+  `);
 });
 
-// Start server
+// Start server and bot
 app.listen(PORT, () => {
   console.log(`🌐 Web server running on port ${PORT}`);
 });
 
-// Login bot
 client.login(process.env.DISCORD_TOKEN);
