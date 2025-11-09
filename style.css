@@ -6,11 +6,13 @@ body {
   text-align: center;
 }
 
+/* Banner */
 .banner img {
   width: 100%;
   display: block;
 }
 
+/* Status cards container */
 .status-container {
   display: flex;
   justify-content: center;
@@ -19,6 +21,7 @@ body {
   flex-wrap: wrap;
 }
 
+/* Base card */
 .status-card {
   border: 3px solid;
   border-radius: 16px;
@@ -27,9 +30,10 @@ body {
   font-size: 1.3em;
   font-weight: bold;
   transition: all 0.3s ease;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.05); /* transparent base */
 }
 
+/* Glow states */
 .status-card.red {
   border-color: #ff4d4d;
   box-shadow: 0 0 25px rgba(255,77,77,0.9);
