@@ -1,3 +1,4 @@
+/* Reset */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -5,6 +6,7 @@ body {
   color: #333;
 }
 
+/* Header */
 .header {
   display: flex;
   align-items: center;
@@ -19,6 +21,7 @@ body {
   font-size: 20px;
 }
 
+/* Hamburger */
 .hamburger {
   width: 40px;
   height: 40px;
@@ -26,7 +29,6 @@ body {
   background: transparent;
   cursor: pointer;
 }
-
 .bar {
   width: 25px;
   height: 3px;
@@ -35,6 +37,7 @@ body {
   margin: 5px auto;
 }
 
+/* Drawer menu */
 .drawer {
   position: fixed;
   top: 0;
@@ -46,7 +49,6 @@ body {
   transition: left 0.3s ease;
   z-index: 1000;
 }
-
 .drawer.open {
   left: 0;
 }
@@ -56,11 +58,9 @@ body {
   padding: 0;
   margin: 0;
 }
-
 .nav-list li {
   margin-bottom: 10px;
 }
-
 .nav-list li a {
   color: #fff;
   text-decoration: none;
@@ -68,11 +68,11 @@ body {
   padding: 10px;
   border-radius: 4px;
 }
-
 .nav-list li a:hover {
   background: #444;
 }
 
+/* Overlay */
 .overlay {
   position: fixed;
   inset: 0;
@@ -82,6 +82,26 @@ body {
   transition: opacity 0.3s ease;
   z-index: 900;
 }
-
 .overlay.show {
- 
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Content */
+.content {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+.hero {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
