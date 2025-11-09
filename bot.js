@@ -8,13 +8,27 @@ const app = express();
 // --------------------
 // Discord Bot Setup
 // --------------------
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ]
+});
 
 client.once("ready", () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
-// Login with token stored in Render environment variables
+// Simple !ping command
+client.on("messageCreate", (message) => {
+  if (message.author.bot) return; // ignore bots
+  if (message.content === "!ping") {
+    message.reply("🏓 Pong!");
+  }
+});
+
+// Login using environment variable
 client.login(process.env.DISCORD_TOKEN);
 
 // --------------------
@@ -33,7 +47,7 @@ app.get("/status", async (req, res) => {
 
     res.json({
       players: playerCount,
-      sessionActive: false // you can later toggle this with another env var
+      sessionActive: false
     });
   } catch (err) {
     console.error(err);
